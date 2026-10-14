@@ -218,6 +218,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 300);
   });
 
+  elements.citySearchInput.addEventListener('keydown', async (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const query = elements.citySearchInput.value.trim();
+      if (query.length >= 2) {
+        clearTimeout(searchDebounceTimer);
+        elements.autocompleteDropdown.classList.add('hidden');
+        elements.searchSpinner.classList.remove('hidden');
+        try {
+          const res = await fetch(`/api/geocode?q=${encodeURIComponent(query)}&count=1`);
+          elements.searchSpinner.classList.add('hidden');
+          if (res.ok) {
+            const data = await res.json();
+            const results = data.results || [];
+            if (results.length > 0) {
+              const item = results[0];
+              loadWeather(item.latitude, item.longitude, item.name, item.country, item.admin1);
+            } else {
+              showToast(`Location '${query}' not found.`, 'error');
+            }
+          }
+        } catch (err) {
+          elements.searchSpinner.classList.add('hidden');
+        }
+      }
+    }
+  });
+
   elements.clearSearchBtn.addEventListener('click', () => {
     elements.citySearchInput.value = '';
     elements.clearSearchBtn.classList.add('hidden');
