@@ -3,19 +3,24 @@ FROM python:3.13-slim
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PORT=8000
+    PORT=8000 \
+    PATH="/opt/venv/bin:$PATH"
 
 WORKDIR /app
 
-# Install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Create an isolated virtual environment to suppress root user warnings
+RUN python -m venv /opt/venv
 
-# Copy application files
+# Install dependencies inside the virtual environment
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Copy application source code
 COPY . .
 
-# Expose default port
+# Expose default application port
 EXPOSE 8000
 
-# Run with uvicorn
+# Start production server
 CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]
