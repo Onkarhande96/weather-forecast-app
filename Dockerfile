@@ -4,6 +4,7 @@ FROM python:3.13-slim
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PORT=8000 \
+    PYTHONPATH="/app:$PYTHONPATH" \
     PATH="/opt/venv/bin:$PATH"
 
 WORKDIR /app
@@ -22,5 +23,5 @@ COPY . .
 # Expose default application port
 EXPOSE 8000
 
-# Start production server
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]
+# Start production server using python run.py
+CMD ["python", "run.py"]
