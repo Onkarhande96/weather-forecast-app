@@ -1,13 +1,13 @@
 // AtmosphereX Main Controller
 
 document.addEventListener('DOMContentLoaded', () => {
-  // App State
+  // App State - Default to Pune, Maharashtra, India
   const state = {
-    lat: 51.5074,
-    lon: -0.1278,
-    name: 'London',
-    country: 'United Kingdom',
-    admin1: '',
+    lat: 18.5204,
+    lon: 73.8567,
+    name: 'Pune',
+    country: 'India',
+    admin1: 'Maharashtra',
     tempUnit: localStorage.getItem('atmos_temp_unit') || 'celsius',
     windUnit: localStorage.getItem('atmos_temp_unit') === 'fahrenheit' ? 'mph' : 'kmh',
     theme: localStorage.getItem('atmos_theme') || 'dark',
@@ -679,6 +679,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 3500);
   }
 
-  // Initial Boot
-  loadWeather(state.lat, state.lon, state.name, state.country);
+  // Initial Boot - Starts with Pune, Maharashtra, India
+  loadWeather(state.lat, state.lon, state.name, state.country, state.admin1);
 });
