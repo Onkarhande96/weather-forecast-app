@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Analysis — AtmosphereX</title>
+  <meta name="description" content="Exploratory atmospheric data analysis, multi-variable correlation matrix, and anomaly detection.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
+
+  <div class="app-layout">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 0.85rem; color: inherit;">
+          <div class="logo-icon"><i class="fas fa-cloud-bolt"></i></div>
+          <div class="brand-text">
+            <h1>Atmosphere<span>X</span></h1>
+            <span class="tagline">Atmospheric Intelligence & Analytics</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="header-controls">
+        <div class="live-clock" id="liveClock"><i class="far fa-clock"></i> <span id="clockTime">--:--:--</span></div>
+        <button class="icon-action-btn" id="themeToggleBtn" title="Toggle Theme"><i class="fas fa-moon" id="themeIcon"></i></button>
+      </div>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav class="app-nav">
+      <a href="/" class="nav-link"><i class="fas fa-cloud-sun"></i> Weather Forecasting</a>
+      <a href="/data-collection" class="nav-link"><i class="fas fa-database"></i> Data Collection</a>
+      <a href="/data-analysis" class="nav-link active"><i class="fas fa-chart-pie"></i> Data Analysis</a>
+      <a href="/rainfall-prediction" class="nav-link"><i class="fas fa-cloud-showers-heavy"></i> Rainfall Prediction</a>
+      <a href="/temperature-prediction" class="nav-link"><i class="fas fa-temperature-high"></i> Temperature Prediction</a>
+      <a href="/data-visualization" class="nav-link"><i class="fas fa-chart-line"></i> Data Visualization</a>
+    </nav>
+
+    <!-- Hero / Title -->
+    <section class="page-hero-card">
+      <div class="hero-badge"><i class="fas fa-chart-pie"></i> Statistical Intelligence & Analytics</div>
+      <h2>Exploratory Atmospheric Data Analysis (EDA)</h2>
+      <p>Descriptive statistical metrics, multi-parameter Pearson correlation coefficients, frequency distributions, and atmospheric anomaly detection algorithms.</p>
+    </section>
+
+    <!-- Statistical Summary Indicators -->
+    <div class="status-metric-grid">
+      <div class="metric-glass-card">
+        <div class="metric-icon-box cyan"><i class="fas fa-temperature-half"></i></div>
+        <div class="metric-info">
+          <span class="metric-title">Mean Temperature (μ)</span>
+          <span class="metric-val">26.4°C</span>
+          <span class="metric-sub">Median: 26.1°C | σ: 3.8°C</span>
+        </div>
+      </div>
+
+      <div class="metric-glass-card">
+        <div class="metric-icon-box blue"><i class="fas fa-droplet"></i></div>
+        <div class="metric-info">
+          <span class="metric-title">Mean Relative Humidity</span>
+          <span class="metric-val">64.2%</span>
+          <span class="metric-sub">Variance: 129.9%² | σ: 11.4%</span>
+        </div>
+      </div>
+
+      <div class="metric-glass-card">
+        <div class="metric-icon-box indigo"><i class="fas fa-gauge-high"></i></div>
+        <div class="metric-info">
+          <span class="metric-title">Barometric Quartiles</span>
+          <span class="metric-val">1013 hPa</span>
+          <span class="metric-sub">Q1: 1010.2 | Q3: 1015.8 hPa</span>
+        </div>
+      </div>
+
+      <div class="metric-glass-card">
+        <div class="metric-icon-box purple"><i class="fas fa-smog"></i></div>
+        <div class="metric-info">
+          <span class="metric-title">Mean PM2.5 Dispersion</span>
+          <span class="metric-val">38.2 µg/m³</span>
+          <span class="metric-sub">WHO Threshold: 15.0 µg/m³</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Correlation Matrix Heatmap & Insights -->
+    <section class="tool-section-card">
+      <div class="section-card-header">
+        <div class="sec-title">
+          <i class="fas fa-table-cells"></i>
+          <h3>Multi-Variable Pearson Correlation Matrix (r)</h3>
+        </div>
+        <span class="badge-tag">Normalized Range [-1.0 to +1.0]</span>
+      </div>
+
+      <div class="correlation-grid-wrapper">
+        <table class="correlation-table">
+          <thead>
+            <tr>
+              <th>Variable</th>
+              <th>Temperature</th>
+              <th>Humidity</th>
+              <th>Pressure</th>
+              <th>Wind Speed</th>
+              <th>Rain Probability</th>
+              <th>PM2.5</th>
+              <th>UV Index</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="row-header">Temperature</td>
+              <td class="corr-cell corr-p10">1.00</td>
+              <td class="corr-cell corr-n07">-0.68</td>
+              <td class="corr-cell corr-n02">-0.24</td>
+              <td class="corr-cell corr-p03">+0.32</td>
+              <td class="corr-cell corr-n04">-0.45</td>
+              <td class="corr-cell corr-p02">+0.22</td>
+              <td class="corr-cell corr-p08">+0.84</td>
+            </tr>
+            <tr>
+              <td class="row-header">Humidity</td>
+              <td class="corr-cell corr-n07">-0.68</td>
+              <td class="corr-cell corr-p10">1.00</td>
+              <td class="corr-cell corr-n03">-0.35</td>
+              <td class="corr-cell corr-n02">-0.18</td>
+              <td class="corr-cell corr-p08">+0.78</td>
+              <td class="corr-cell corr-p04">+0.41</td>
+              <td class="corr-cell corr-n06">-0.62</td>
+            </tr>
+            <tr>
+              <td class="row-header">Pressure</td>
+              <td class="corr-cell corr-n02">-0.24</td>
+              <td class="corr-cell corr-n03">-0.35</td>
+              <td class="corr-cell corr-p10">1.00</td>
+              <td class="corr-cell corr-n03">-0.28</td>
+              <td class="corr-cell corr-n07">-0.74</td>
+              <td class="corr-cell corr-p03">+0.30</td>
+              <td class="corr-cell corr-p01">+0.12</td>
+            </tr>
+            <tr>
+              <td class="row-header">Wind Speed</td>
+              <td class="corr-cell corr-p03">+0.32</td>
+              <td class="corr-cell corr-n02">-0.18</td>
+              <td class="corr-cell corr-n03">-0.28</td>
+              <td class="corr-cell corr-p10">1.00</td>
+              <td class="corr-cell corr-p03">+0.34</td>
+              <td class="corr-cell corr-n06">-0.58</td>
+              <td class="corr-cell corr-p02">+0.25</td>
+            </tr>
+            <tr>
+              <td class="row-header">Rain Probability</td>
+              <td class="corr-cell corr-n04">-0.45</td>
+              <td class="corr-cell corr-p08">+0.78</td>
+              <td class="corr-cell corr-n07">-0.74</td>
+              <td class="corr-cell corr-p03">+0.34</td>
+              <td class="corr-cell corr-p10">1.00</td>
+              <td class="corr-cell corr-n04">-0.42</td>
+              <td class="corr-cell corr-n07">-0.71</td>
+            </tr>
+            <tr>
+              <td class="row-header">PM2.5</td>
+              <td class="corr-cell corr-p02">+0.22</td>
+              <td class="corr-cell corr-p04">+0.41</td>
+              <td class="corr-cell corr-p03">+0.30</td>
+              <td class="corr-cell corr-n06">-0.58</td>
+              <td class="corr-cell corr-n04">-0.42</td>
+              <td class="corr-cell corr-p10">1.00</td>
+              <td class="corr-cell corr-n02">-0.20</td>
+            </tr>
+            <tr>
+              <td class="row-header">UV Index</td>
+              <td class="corr-cell corr-p08">+0.84</td>
+              <td class="corr-cell corr-n06">-0.62</td>
+              <td class="corr-cell corr-p01">+0.12</td>
+              <td class="corr-cell corr-p02">+0.25</td>
+              <td class="corr-cell corr-n07">-0.71</td>
+              <td class="corr-cell corr-n02">-0.20</td>
+              <td class="corr-cell corr-p10">1.00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Key Insights Cards -->
+      <div class="insights-grid">
+        <div class="insight-item">
+          <i class="fas fa-lightbulb text-cyan"></i>
+          <div>
+            <strong>Pressure vs Rainfall (r = -0.74):</strong>
+            <span>Strong negative correlation confirming barometric depressions consistently precede precipitation events.</span>
+          </div>
+        </div>
+        <div class="insight-item">
+          <i class="fas fa-wind text-blue"></i>
+          <div>
+            <strong>Wind Speed vs PM2.5 (r = -0.58):</strong>
+            <span>Moderate negative correlation showing higher wind dispersion effectively scrubs particulate matter.</span>
+          </div>
+        </div>
+        <div class="insight-item">
+          <i class="fas fa-sun text-purple"></i>
+          <div>
+            <strong>Temperature vs UV Index (r = +0.84):</strong>
+            <span>Very strong positive correlation driven by direct solar radiation and minimal cloud reflection.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Two-Column Chart Section -->
+    <div class="charts-two-col">
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div class="chart-title"><i class="fas fa-chart-column"></i> Temperature Frequency Distribution (Histogram)</div>
+        </div>
+        <div class="canvas-holder">
+          <canvas id="tempDistributionChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div class="chart-title"><i class="fas fa-chart-line"></i> Temperature vs Humidity Scatter Regression</div>
+        </div>
+        <div class="canvas-holder">
+          <canvas id="scatterRegressionChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Anomaly Detection Section -->
+    <section class="tool-section-card">
+      <div class="section-card-header">
+        <div class="sec-title">
+          <i class="fas fa-triangle-exclamation"></i>
+          <h3>Algorithmic Anomaly Detection (Z-Score Threshold &gt; 2.5)</h3>
+        </div>
+        <span class="badge-tag">Statistical Outliers</span>
+      </div>
+
+      <div class="table-responsive-wrapper">
+        <table class="glass-data-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Station / Location</th>
+              <th>Observed Parameter</th>
+              <th>Observed Value</th>
+              <th>Calculated Z-Score</th>
+              <th>Classification</th>
+              <th>Mitigation Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>14 Oct 2026 16:45</td>
+              <td>Pune Central</td>
+              <td>Barometric Pressure</td>
+              <td class="text-orange">1004.2 hPa</td>
+              <td><span class="badge-zscore negative">-2.62 σ</span></td>
+              <td>Rapid Barometric Drop</td>
+              <td>Pre-storm advisory dispatched automatically</td>
+            </tr>
+            <tr>
+              <td>12 Oct 2026 14:15</td>
+              <td>New Delhi (Lodhi)</td>
+              <td>PM2.5 Particulate</td>
+              <td class="text-red">78.4 µg/m³</td>
+              <td><span class="badge-zscore positive">+2.78 σ</span></td>
+              <td>Severe Particulate Spike</td>
+              <td>WHO Unhealthy warning triggered</td>
+            </tr>
+            <tr>
+              <td>10 Oct 2026 13:30</td>
+              <td>Nagpur Met</td>
+              <td>Ambient Air Temp</td>
+              <td class="text-orange">37.8°C</td>
+              <td><span class="badge-zscore positive">+2.55 σ</span></td>
+              <td>Mid-Day Heat Anomaly</td>
+              <td>Heatwave hydration bulletin issued</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>AtmosphereX &bull; MSBTE Capstone Project &bull; Asynchronous Full-Stack Cloud Intelligence</p>
+    </footer>
+  </div>
+
+  <script src="/static/js/data_analysis.js"></script>
+</body>
+</html>

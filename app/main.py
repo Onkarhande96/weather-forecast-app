@@ -20,11 +20,13 @@ try:
     from app.services.weather_service import WeatherService
     from app.services.geocoding_service import GeocodingService
     from app.services.export_service import ExportService
+    from app.services.analytics_service import AnalyticsService
 except ImportError:
     from models.schemas import WeatherResponse, LocationInfo
     from services.weather_service import WeatherService
     from services.geocoding_service import GeocodingService
     from services.export_service import ExportService
+    from services.analytics_service import AnalyticsService
 
 app = FastAPI(
     title="AtmosphereX - Weather Forecasting Web Application",
@@ -59,9 +61,40 @@ class ExportRequest(BaseModel):
 
 
 @app.get("/", response_class=HTMLResponse)
+@app.get("/weather-forecasting", response_class=HTMLResponse)
 async def home(request: Request):
     """Serve the primary Weather Forecasting Dashboard."""
     return templates.TemplateResponse(request=request, name="index.html")
+
+
+@app.get("/data-collection", response_class=HTMLResponse)
+async def page_data_collection(request: Request):
+    """Serve the Data Collection & Telemetry Ingestion Studio."""
+    return templates.TemplateResponse(request=request, name="data_collection.html")
+
+
+@app.get("/data-analysis", response_class=HTMLResponse)
+async def page_data_analysis(request: Request):
+    """Serve the Exploratory Data Analysis (EDA) & Statistics Dashboard."""
+    return templates.TemplateResponse(request=request, name="data_analysis.html")
+
+
+@app.get("/rainfall-prediction", response_class=HTMLResponse)
+async def page_rainfall_prediction(request: Request):
+    """Serve the ML Rainfall Probability & Precipitation Prediction Studio."""
+    return templates.TemplateResponse(request=request, name="rainfall_prediction.html")
+
+
+@app.get("/temperature-prediction", response_class=HTMLResponse)
+async def page_temperature_prediction(request: Request):
+    """Serve the Predictive Diurnal Temperature Modeling Dashboard."""
+    return templates.TemplateResponse(request=request, name="temperature_prediction.html")
+
+
+@app.get("/data-visualization", response_class=HTMLResponse)
+async def page_data_visualization(request: Request):
+    """Serve the Multi-Dimensional Atmospheric Data Visualization Studio."""
+    return templates.TemplateResponse(request=request, name="data_visualization.html")
 
 
 @app.get("/api/weather")
@@ -166,3 +199,55 @@ async def export_weather(request: ExportRequest):
 async def health_check():
     """Application health probe."""
     return {"status": "ok", "service": "AtmosphereX Weather App", "version": "1.0.0"}
+
+
+@app.get("/api/predict/rainfall")
+@app.post("/api/predict/rainfall")
+async def api_predict_rainfall(
+    temp: float = Query(28.5),
+    humidity: float = Query(78.0),
+    pressure: float = Query(1008.2),
+    cloud_cover: float = Query(85.0),
+    wind_speed: float = Query(18.5),
+    dew_point: Optional[float] = Query(None)
+):
+    """Compute ML-based rainfall probability and volume."""
+    result = AnalyticsService.predict_rainfall(
+        temp=temp,
+        humidity=humidity,
+        pressure=pressure,
+        cloud_cover=cloud_cover,
+        wind_speed=wind_speed,
+        dew_point=dew_point
+    )
+    return JSONResponse(content=result)
+
+
+@app.get("/api/predict/temperature")
+@app.post("/api/predict/temperature")
+async def api_predict_temperature(
+    base_temp: float = Query(28.4),
+    horizon_hours: int = Query(24),
+    heat_island_delta: float = Query(0.0),
+    humidity_factor: float = Query(50.0)
+):
+    """Compute diurnal temperature projection time-series."""
+    result = AnalyticsService.predict_temperature_projection(
+        base_temp=base_temp,
+        horizon_hours=horizon_hours,
+        heat_island_delta=heat_island_delta,
+        humidity_factor=humidity_factor
+    )
+    return JSONResponse(content=result)
+
+
+@app.get("/api/analytics/eda")
+async def api_get_eda():
+    """Get atmospheric exploratory data analysis, correlation matrix, and anomaly stats."""
+    return JSONResponse(content=AnalyticsService.get_exploratory_analysis())
+
+
+@app.get("/api/data/records")
+async def api_get_data_records():
+    """Get active telemetry records for data collection studio."""
+    return JSONResponse(content={"records": AnalyticsService.get_sample_collected_records()})

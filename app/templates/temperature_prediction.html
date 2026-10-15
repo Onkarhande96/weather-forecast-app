@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Temperature Prediction — AtmosphereX</title>
+  <meta name="description" content="Predictive temperature modeling, diurnal cycle harmonic forecasting, and urban heat island simulation.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌡️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
+
+  <div class="app-layout">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 0.85rem; color: inherit;">
+          <div class="logo-icon"><i class="fas fa-cloud-bolt"></i></div>
+          <div class="brand-text">
+            <h1>Atmosphere<span>X</span></h1>
+            <span class="tagline">Atmospheric Intelligence & Analytics</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="header-controls">
+        <div class="live-clock" id="liveClock"><i class="far fa-clock"></i> <span id="clockTime">--:--:--</span></div>
+        <button class="icon-action-btn" id="themeToggleBtn" title="Toggle Theme"><i class="fas fa-moon" id="themeIcon"></i></button>
+      </div>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav class="app-nav">
+      <a href="/" class="nav-link"><i class="fas fa-cloud-sun"></i> Weather Forecasting</a>
+      <a href="/data-collection" class="nav-link"><i class="fas fa-database"></i> Data Collection</a>
+      <a href="/data-analysis" class="nav-link"><i class="fas fa-chart-pie"></i> Data Analysis</a>
+      <a href="/rainfall-prediction" class="nav-link"><i class="fas fa-cloud-showers-heavy"></i> Rainfall Prediction</a>
+      <a href="/temperature-prediction" class="nav-link active"><i class="fas fa-temperature-high"></i> Temperature Prediction</a>
+      <a href="/data-visualization" class="nav-link"><i class="fas fa-chart-line"></i> Data Visualization</a>
+    </nav>
+
+    <!-- Hero / Title -->
+    <section class="page-hero-card">
+      <div class="hero-badge"><i class="fas fa-temperature-arrow-up"></i> Time-Series Thermal Forecasting</div>
+      <h2>Predictive Temperature Modeling & Diurnal Cycles</h2>
+      <p>Simulating 24-to-48-hour thermal trajectories utilizing harmonic solar radiative transfer, nocturnal cooling gradients, and urban micro-climate heat adjustments.</p>
+    </section>
+
+    <!-- Simulation Configuration Card -->
+    <section class="tool-section-card">
+      <div class="section-card-header">
+        <div class="sec-title">
+          <i class="fas fa-sliders"></i>
+          <h3>Temperature Projection Parameters</h3>
+        </div>
+        <button class="btn-sm" id="loadPuneTempBtn">
+          <i class="fas fa-location-crosshairs"></i> Load Live Pune Ambient
+        </button>
+      </div>
+
+      <div class="collector-form-grid">
+        <div class="input-group">
+          <label for="baseTempInput"><i class="fas fa-thermometer"></i> Base Air Temp (°C)</label>
+          <input type="number" id="baseTempInput" class="form-input" value="28.4" step="0.1" min="-20" max="55" required>
+        </div>
+
+        <div class="input-group">
+          <label for="horizonSelect"><i class="fas fa-clock"></i> Projection Horizon</label>
+          <select id="horizonSelect" class="form-select">
+            <option value="24" selected>Next 24 Hours</option>
+            <option value="48">Next 48 Hours</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="uhiSlider"><i class="fas fa-city"></i> Urban Heat Island (+°C): <span id="uhiVal">1.2°C</span></label>
+          <input type="range" id="uhiSlider" class="form-range" min="0" max="3.5" step="0.1" value="1.2">
+        </div>
+
+        <div class="input-group">
+          <label for="tempHumidityInput"><i class="fas fa-droplet"></i> Relative Humidity (%)</label>
+          <input type="number" id="tempHumidityInput" class="form-input" value="62" min="10" max="95">
+        </div>
+      </div>
+
+      <div style="margin-top: 1rem;">
+        <button class="primary-action-btn" id="runTempPredictionBtn">
+          <i class="fas fa-chart-line"></i> Generate Thermal Projection
+        </button>
+      </div>
+    </section>
+
+    <!-- Key Projected Extrema -->
+    <div class="status-metric-grid">
+      <div class="metric-glass-card">
+        <div class="metric-icon-box orange"><i class="fas fa-sun"></i></div>
+        <div class="metric-info">
+          <span class="metric-title">Peak Projected Heating</span>
+          <span class="metric-val text-orange" id="peakTempVal">34.1°C</span>
+          <span class="metric-sub" id="peakTempTime">+4h (14:00)</span>
+        </div>
+      </div>
+
+      <div class="metric-glass-card">
+        <div class="metric-icon-box cyan"><i class="fas fa-snowflake"></i></div>
+        <div class="metric-info">
+          <span class="metric-title">Min Nocturnal Cooling</span>
+          <span class="metric-val text-cyan" id="minTempVal">22.8°C</span>
+          <span class="metric-sub" id="minTempTime">+19h (05:00)</span>
+        </div>
+      </div>
+
+      <div class="metric-glass-card">
+        <div class="metric-icon-box indigo"><i class="fas fa-arrows-up-down"></i></div>
+        <div class="metric-info">
+          <span class="metric-title">Diurnal Thermal Spread</span>
+          <span class="metric-val" id="thermalSpreadVal">11.3°C</span>
+          <span class="metric-sub">Mean: 27.6°C</span>
+        </div>
+      </div>
+
+      <div class="metric-glass-card">
+        <div class="metric-icon-box purple"><i class="fas fa-check-double"></i></div>
+        <div class="metric-info">
+          <span class="metric-title">Model Accuracy</span>
+          <span class="metric-val text-green">R² = 0.962</span>
+          <span class="metric-sub">MAE: 0.84°C | RMSE: 1.12°C</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Projected Temperature Curve Chart -->
+    <section class="tool-section-card">
+      <div class="section-card-header">
+        <div class="sec-title">
+          <i class="fas fa-chart-area"></i>
+          <h3>Projected Diurnal Temperature Curve with 95% Confidence Bounds</h3>
+        </div>
+        <span class="badge-tag">Harmonic Diurnal Model</span>
+      </div>
+
+      <div class="canvas-holder-large">
+        <canvas id="tempProjectionChart"></canvas>
+      </div>
+    </section>
+
+    <!-- Hourly Table Breakdown -->
+    <section class="tool-section-card">
+      <div class="section-card-header">
+        <div class="sec-title">
+          <i class="fas fa-table-cells-large"></i>
+          <h3>Hourly Temperature Projections Matrix</h3>
+        </div>
+        <button class="btn-sm" id="exportTempCsvBtn"><i class="fas fa-file-csv"></i> Export Forecast CSV</button>
+      </div>
+
+      <div class="table-responsive-wrapper">
+        <table class="glass-data-table" id="tempProjectionTable">
+          <thead>
+            <tr>
+              <th>Time Horizon</th>
+              <th>Predicted Temp (°C)</th>
+              <th>Feels-Like (°C)</th>
+              <th>95% Confidence Interval</th>
+              <th>Thermal State</th>
+            </tr>
+          </thead>
+          <tbody id="tempProjectionBody">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>AtmosphereX &bull; MSBTE Capstone Project &bull; Asynchronous Full-Stack Cloud Intelligence</p>
+    </footer>
+  </div>
+
+  <script src="/static/js/temperature_prediction.js"></script>
+</body>
+</html>
